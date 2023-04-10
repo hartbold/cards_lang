@@ -22,6 +22,11 @@ header .btns-container .btn + .btn{
     margin-left: 1rem;
 }
 
+#random-word{
+    border-radius: 50%;
+    padding: 0 0.2rem;
+}
+
 .container{
 }
 
@@ -53,7 +58,7 @@ header .btns-container .btn + .btn{
 
 .table>:not(caption)>*>*{
     border-bottom: 0px;
-    padding: .2rem 2rem;
+    padding: .2rem .5rem;
 }
 
 .table>:not(caption)>*>td:first-child{

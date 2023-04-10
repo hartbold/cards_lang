@@ -20,6 +20,7 @@ const RowDict = () => {
 const RowList = (word) => {
 
     const tr = $(`<tr data-id="${word.id}">
+    <td><i class="fa fa-rug"></i></td>
     <td>
     <b>${word.word}</b>
     </td>

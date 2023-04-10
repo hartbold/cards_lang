@@ -1,0 +1,14 @@
+{
+    "short_name": "Cartas de idioma",
+    "name": "Cartas de idioma",
+    "icons": [
+        {
+            "src": "lluru512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/index.html",
+    "display": "fullscreen",
+    "orientation": "portrait"
+}
