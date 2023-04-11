@@ -166,7 +166,7 @@ const CardsLang = {
             $modal.find("h2").html(obj.word);
             $modal.find("p").html(obj.w_translated);
 
-            $modal.toggle("show");
+            $modal.modal("toggle");
         }
 
     }
