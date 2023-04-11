@@ -230,7 +230,6 @@ const CardsLangLocalData = {
     },
 
     getWordEdit: function (id) {
-        console.log(id)
         const req = CardsLangLocalData.getObjectStore(CardsLangLocalData.DB_STORE_NAME, "readonly").get(id);
         req.onsuccess = (evt) => {
             var record = evt.target.result;
@@ -265,7 +264,7 @@ const CardsLangLocalData = {
 
             // CardsLang.input_search_bar.value = "";
             // CardsLang.input_search_bar.dispatchEvent("onkeyup");
-
+            obj.id = evt.target.result;
             CardsLang.add_list_words(obj);
 
         };
