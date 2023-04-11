@@ -3,7 +3,7 @@
     "name": "Cartas de idioma",
     "icons": [
         {
-            "src": "lluru512.png",
+            "src": "img/lluru512.png",
             "sizes": "512x512",
             "type": "image/png"
         }
