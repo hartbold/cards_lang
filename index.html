@@ -37,16 +37,15 @@
                 <h1>Mis cartas</h1>
                 <div class="btns-container">
                     <button id="lists-show" class="btn btn-sm btn-info" type="button"><i
-                            class="fa fa-align-justify"></i>Mis
-                        listas</button>
+                            class="fa fa-align-justify"></i></button>
+
+                    <button id="random-word" type="button" class="btn btn-warning btn-sm">
+                        <i class="fa fa-clone"></i>
+                    </button>
 
                     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                         data-bs-target="#modal-lists-add">
                         <i class="fa fa-plus"></i>Nueva Lista
-                    </button>
-
-                    <button id="random-word" type="button" class="btn btn-warning btn-sm">
-                        <i class="fa fa-clone"></i>
                     </button>
                 </div>
             </header>
@@ -77,7 +76,7 @@
                     </div>
                     <div class="modal-body">
                         <input id="modal-list-add__title" type="text" placeholder="Título de la lista"
-                            value="Nueva lista" class="form-control" />
+                            class="form-control" />
                         <hr>
                         <fieldset></fieldset>
                         <button id="add-word" type="button" class="btn btn-sm btn-primary"><i
