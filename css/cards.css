@@ -31,12 +31,6 @@ header .btns-container .btn + .btn{
     font-weight: 400 !important;
 }
 
-.container{
-}
-
-#app-body{
-}
-
 .modal-content{
     border-radius: 0;
 }
@@ -54,8 +48,17 @@ header .btns-container .btn + .btn{
     background-color: var(--bs-primary);
 }
 
+#modal-word-edit .modal-header{
+    background-color: #343541;
+}
+
 .modal-body{
     padding-top: 3rem;
+}
+
+.table-responsive{
+    max-height: 50vh;
+    overflow-y: auto;
 }
 
 .table{
