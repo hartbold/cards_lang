@@ -27,6 +27,10 @@ header .btns-container .btn + .btn{
     padding: 0 0.2rem;
 }
 
+.font-light{
+    font-weight: 400 !important;
+}
+
 .container{
 }
 
@@ -67,11 +71,18 @@ header .btns-container .btn + .btn{
 
 .table .btn{
     padding: 0;
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1;
 }
 
 .table .btn-edit{
     color: white;
     text-transform: none;
+}
+
+.table b{
+    line-height: 1.7rem;
 }
 
 .row-dict{
@@ -89,4 +100,22 @@ header .btns-container .btn + .btn{
 
 .btn > i.fa{
     margin: 0 .3rem;
+}
+
+#modal-word-game{
+    text-align: center;
+}
+
+#modal-word-game .modal-body{
+    padding-top: 2rem;
+}
+
+#modal-word-game h2{
+    font-weight: 400;
+    margin-top: 0;
+    color: #343541;
+}
+
+#modal-word-game p{
+    color: #343541;
 }

@@ -10,7 +10,7 @@ const RowDict = () => {
 </div>`)[0]
 
     row.querySelectorAll("input").forEach(input => {
-        input.addEventListener('keyup', CardsLang.modal_add_listener_save);
+        input.addEventListener('keyup', CardsLang.modalAddListenerSave);
     })
 
     return row;
@@ -20,7 +20,7 @@ const RowDict = () => {
 const RowList = (word) => {
 
     const tr = $(`<tr data-id="${word.id}">
-    <td><i class="fa fa-rug"></i></td>
+    <td><i class="fa fa-star font-light" ></i></td>
     <td>
     <b>${word.word}</b>
     </td>
@@ -37,7 +37,7 @@ const RowList = (word) => {
     })
 
     tr.querySelectorAll(".btn-edit").forEach(btn => {
-        btn.addEventListener('click', CardsLang.open_edit_modal);
+        btn.addEventListener('click', CardsLang.openEditModal);
     })
 
     return tr;
@@ -60,6 +60,8 @@ const CardsLang = {
     modal_btn_save_words: null,
     modal_edit_word: null,
     modal_btn_edit_save: null,
+    modal_game: null,
+    modal_game_btn: null,
 
     ctrl_modal_opened: false,
 
@@ -74,28 +76,34 @@ const CardsLang = {
         this.modal_btn_save_words = document.getElementById('save-words');
         this.modal_edit_word = document.getElementById('modal-word-edit');
         this.modal_btn_edit_save = document.getElementById('save-edit');
+        this.modal_game = document.getElementById('modal-word-game');
+        this.modal_game_btn = document.getElementById('game-resolve');
 
         this.init_listeners();
     },
 
     init_listeners: function () {
-        this.input_search_bar.addEventListener("keyup", this.search_list_items);
-        this.btn_add_item.addEventListener("click", this.add_list_items);
-        // this.btn_add_list.addEvent("click", this.add_list_show);
+        this.input_search_bar.addEventListener("keyup", this.searchListItems);
+        this.btn_add_item.addEventListener("click", this.addListItem);
         this.btn_show_lists.addEventListener("click", this.show_lists_show);
 
-        this.modal_add_list.addEventListener('shown.bs.modal', this.modal_add_list_on_shown);
-        this.modal_btn_add_word.addEventListener("click", this.modal_add_word);
-        this.modal_btn_save_words.addEventListener("click", this.modal_save_words);
+        this.modal_add_list.addEventListener('shown.bs.modal', this.modalAddListShow);
+        this.modal_btn_add_word.addEventListener("click", this.modalAddWord);
+        this.modal_btn_save_words.addEventListener("click", this.modalSaveWords);
 
-        this.modal_btn_edit_save.addEventListener("click", this.modal_edit_save);
+        this.modal_btn_edit_save.addEventListener("click", this.modalEditSave);
+
+        this.modal_game.addEventListener("shown.bs.modal", this.modalGameShow);
+        this.modal_game.addEventListener("hidden.bs.modal", this.modalGameHide);
+        this.modal_game_btn.addEventListener("click", this.modalGameResolve);
+
     },
 
-    add_list_words: function (word) {
+    addListWords: function (word) {
         CardsLang.list_items.append(RowList(word));
     },
 
-    search_list_items: function () {
+    searchListItems: function () {
 
         const word = CardsLang.input_search_bar.value
 
@@ -103,7 +111,7 @@ const CardsLang = {
 
     },
 
-    add_list_items: function () {
+    addListItem: function () {
 
         const word = CardsLang.input_search_bar.value
         if (word != "") {
@@ -112,24 +120,17 @@ const CardsLang = {
 
     },
 
-    /**
-     * abre el modal para ir añadiendo 
-     */
-    add_list_show: function () {
-
-    },
-
     show_lists_show: function () {
 
     },
 
-    modal_add_list_on_shown: function () {
+    modalAddListShow: function () {
 
         if (!CardsLang.ctrl_modal_opened) {
             const fieldset = $(this).find("fieldset");
             for (i = 0; i < 5; i++) {
                 const row = RowDict();
-                // row.querySelectorAll("input").addEventListener("keyup", CardsLang.modal_add_listener_save);
+                // row.querySelectorAll("input").addEventListener("keyup", CardsLang.modalAddListenerSave);
                 fieldset.prepend(row);
             }
         }
@@ -142,17 +143,17 @@ const CardsLang = {
 
     },
 
-    modal_add_word: function () {
+    modalAddWord: function () {
         const row = RowDict();
-        // row.querySelectorAll("input").addEventListener("keyup", CardsLang.modal_add_listener_save);
+        // row.querySelectorAll("input").addEventListener("keyup", CardsLang.modalAddListenerSave);
         $(this).closest(".modal").find("fieldset").append(row);
     },
 
-    modal_add_listener_save: function () {
+    modalAddListenerSave: function () {
         // CardsLang.weakMap.set(this, this.value);
     },
 
-    modal_save_words: function () {
+    modalSaveWords: function () {
 
         const modal = CardsLang.modal_add_list;
 
@@ -177,13 +178,33 @@ const CardsLang = {
 
     },
 
-    open_edit_modal: function () {
+    openEditModal: function () {
         const id = $(this).closest("tr").data("id");
         CardsLangLocalData.getWordEdit(id);
     },
 
-    modal_edit_save: function () {
+    modalEditSave: function () {
         CardsLangLocalData.saveEditWord();
+    },
+
+    modalGameShow: function () {
+        CardsLangLocalData.loadRandomWord();
+    },
+    modalGameHide: function () {
+        const $modal = $(CardsLang.modal_game);
+        $modal.find("h2").html("");
+        $modal.find("#game-resolve").removeClass("d-none");
+        $modal.find("p").addClass("d-none");
+
+    },
+    modalGameResolve: function () {
+        $(this).addClass("d-none");
+        $(CardsLang.modal_game).find("p").removeClass("d-none");
+    },
+    modalGameLoad: function (obj) {
+        const $modal = $(CardsLang.modal_game);
+        $modal.find("h2").html(obj.word);
+        $modal.find("p").html(obj.w_translated);
     }
 };
 
@@ -254,18 +275,12 @@ const CardsLangLocalData = {
         } catch (e) {
             if (e.name == 'DataCloneError')
                 console.log("clone a blob error");
-            /*displayActionFailure("This engine doesn't know how to clone a Blob, " +
-                                 "use Firefox");*/
             throw e;
         }
 
         req.onsuccess = function (evt) {
-            console.log("Insertion in DB successful");
-
-            // CardsLang.input_search_bar.value = "";
-            // CardsLang.input_search_bar.dispatchEvent("onkeyup");
             obj.id = evt.target.result;
-            CardsLang.add_list_words(obj);
+            CardsLang.addListWords(obj);
 
         };
         req.onerror = function () {
@@ -302,11 +317,6 @@ const CardsLangLocalData = {
 
         var deleteReq = store.delete(word);
         deleteReq.onsuccess = function (evt) {
-            console.log("evt:", evt);
-            console.log("evt.target:", evt.target);
-            console.log("evt.target.result:", evt.target.result);
-            console.log("delete successful");
-
             $tr.hide(function () {
                 $(this).remove();
             })
@@ -326,14 +336,7 @@ const CardsLangLocalData = {
 
             if (cursor) {
                 // req = store.get(cursor.key);
-                CardsLang.add_list_words(cursor.value);
-
-                //req.onsuccess = (evt) => {
-                //  var value = evt.target.result;
-                //CardsLang.add_list_words(value);
-                // console.log(value);
-                //}
-
+                CardsLang.addListWords(cursor.value);
                 cursor.continue();
             }
 
@@ -356,9 +359,44 @@ const CardsLangLocalData = {
         index.openCursor(range).onsuccess = function (event) {
             const cursor = event.target.result
             if (cursor) {
-                CardsLang.add_list_words(cursor.value);
+                CardsLang.addListWords(cursor.value);
                 cursor.continue()
             }
         }
     },
+
+    loadRandomWord: function () {
+        var store = CardsLangLocalData.getObjectStore(CardsLangLocalData.DB_STORE_NAME, "readonly");
+
+        const getRandomInt = function (min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        const done = function (cursor) {
+            CardsLang.modalGameLoad(cursor.value);
+        }
+
+        store.count().onsuccess = function (event) {
+            var total = event.target.result;
+            var needRandom = true;
+            console.log("ok, total is " + total);
+            store.openCursor().onsuccess = function (e) {
+                var cursor = e.target.result;
+                if (needRandom) {
+                    var advance = getRandomInt(0, total - 1);
+                    console.log("going up " + advance);
+                    if (advance > 0) {
+                        needRandom = false;
+                        cursor.advance(advance);
+                    } else {
+                        done(cursor);
+                    }
+                } else {
+                    done(cursor);
+                }
+
+            };
+
+        };
+    }
 };
