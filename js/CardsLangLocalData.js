@@ -4,6 +4,9 @@ const CardsLangLocalData = {
     DB_VERSION: 1, // Use a long long for this value (don't use a float)
     DB_STORE_NAME: 'words',
 
+    last_random_ix: null,
+
+
     init_localdata: function () {
         const request = window.indexedDB.open(CardsLangLocalData.DB_NAME, 1);
         this.request = request;
@@ -170,14 +173,19 @@ const CardsLangLocalData = {
             }
 
             var needRandom = true;
-            console.log("ok, total is " + total);
+            // console.log("ok, total is " + total);
             store.openCursor().onsuccess = function (e) {
                 var cursor = e.target.result;
                 if (needRandom) {
-                    var advance = getRandomInt(0, total - 1);
-                    console.log("going up " + advance);
+                    do {
+                        var advance = getRandomInt(0, total - 1);
+                    } while (CardsLangLocalData.last_random_ix == advance) // que no repita el últiml 
+                    CardsLangLocalData.last_random_ix = advance;
+
+                    // console.log("going up " + advance);
                     if (advance > 0) {
                         needRandom = false;
+
                         cursor.advance(advance);
                     } else {
                         done(cursor);
@@ -189,5 +197,50 @@ const CardsLangLocalData = {
             };
 
         };
+    },
+
+    loadLists: function () {
+
+        var wordsbydict = {};
+
+        async function dostuff() {
+
+            const store = CardsLangLocalData.getObjectStore(CardsLangLocalData.DB_STORE_NAME, "readonly");
+            var index = store.index('dict');
+
+            return new Promise(function (resolve, reject) {
+                var req = index.openCursor(null, 'next');
+
+                req.onsuccess = (evt) => {
+                    var cursor = evt.target.result;
+
+                    if (cursor) {
+                        const dict = cursor.value.dict;
+
+                        if (typeof wordsbydict[dict] == "undefined") {
+                            wordsbydict[dict] = {
+                                date: cursor.value.created_at,
+                                words: []
+                            };
+                        }
+
+                        wordsbydict[dict]["words"].push(cursor.value);
+                        cursor.continue();
+                    } else {
+                        resolve(wordsbydict);
+                    }
+                }
+
+                req.onerror = (evt) => {
+                    console.error('loadLists error')
+                }
+            });
+        }
+
+        dostuff().then(function (result) {
+            CardsLang.showListsShow(result);
+        });
+
+
     }
 };

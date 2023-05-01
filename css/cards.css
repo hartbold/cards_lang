@@ -133,3 +133,41 @@ header .btns-container .btn + .btn{
 #modal-word-game p{
     color: #343541;
 }
+
+#modal-lists .modal-header{
+    background-color: #0dcaf0;
+    color: black;
+}
+
+#modal-lists .modal-body{
+    padding-top: var(--bs-modal-padding);
+}
+
+#modal-lists .table{
+    color: #000;
+    margin-bottom: 0;
+    width: 100%;
+}
+
+#modal-lists .accordion-body{
+    padding: 0;
+}
+
+#modal-lists table .separation{
+    padding-left: 1rem;;
+}
+#modal-lists .table>:not(caption)>*>*{
+    padding: .5rem 1rem;
+}
+#modal-lists .table>:not(caption)>*>td:first-child{
+    padding-left: 1rem;
+}
+
+#modal-lists .accordion-header{
+    text-transform: uppercase;
+}
+
+#modal-lists .accordion-header small{
+    font-weight: lighter;
+    line-height: 1;
+}

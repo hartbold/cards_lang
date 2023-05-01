@@ -8,6 +8,7 @@ const CardsLang = {
     input_search_bar: null,
     btn_add_item: null,
     // btn_add_list,
+    modal_lists: null,
     btn_show_lists: null,
     list_items: null,
     modal_add_list: null,
@@ -18,6 +19,7 @@ const CardsLang = {
     modal_game: null,
     modal_game_btn: null,
     modal_game_btn_open: null,
+    modal_game_btn_next: null,
 
     ctrl_modal_opened: false,
 
@@ -25,6 +27,7 @@ const CardsLang = {
         this.input_search_bar = document.getElementById('search-bar');
         this.btn_add_item = document.getElementById('add-item');
         // this.btn_add_list = document.getElementById('lists-add');
+        this.modal_lists = document.getElementById('modal-lists');
         this.btn_show_lists = document.getElementById('lists-show');
         this.list_items = document.getElementById('dict-list');
         this.modal_add_list = document.getElementById('modal-lists-add');
@@ -35,6 +38,7 @@ const CardsLang = {
         this.modal_game = document.getElementById('modal-word-game');
         this.modal_game_btn = document.getElementById('game-resolve');
         this.modal_game_btn_open = document.getElementById('random-word');
+        this.modal_game_btn_next = document.getElementById('next-card');
 
         this.init_listeners();
     },
@@ -42,7 +46,7 @@ const CardsLang = {
     init_listeners: function () {
         this.input_search_bar.addEventListener("keyup", this.searchListItems);
         this.btn_add_item.addEventListener("click", this.addListItem);
-        this.btn_show_lists.addEventListener("click", this.show_lists_show);
+        this.btn_show_lists.addEventListener("click", this.loadListsShow);
 
         this.modal_add_list.addEventListener('shown.bs.modal', this.modalAddListShow);
         this.modal_btn_add_word.addEventListener("click", this.modalAddWord);
@@ -54,6 +58,7 @@ const CardsLang = {
         this.modal_game.addEventListener("hidden.bs.modal", this.modalGameHide);
         this.modal_game_btn.addEventListener("click", this.modalGameResolve);
         this.modal_game_btn_open.addEventListener("click", this.modalGameShow);
+        this.modal_game_btn_next.addEventListener("click", this.modalGameNextCard);
 
     },
 
@@ -78,8 +83,41 @@ const CardsLang = {
 
     },
 
-    show_lists_show: function () {
+    loadListsShow: function () {
+        CardsLangLocalData.loadLists();
+    },
 
+    showListsShow: function (wordsbydict) {
+
+        const $body = $(CardsLang.modal_lists).find(".modal-body");
+
+        var html = "";
+        var n = 1;
+        $.each(wordsbydict, function (i, v) {
+
+            html += `<div class="accordion-item">
+              <button class="accordion-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${n}" aria-expanded="false" aria-controls="collapse${i}">
+                <span>${i}<br><small>${v.date.toLocaleDateString()}</small></span>
+              </button>
+            <div id="collapse${n}" class="accordion-collapse collapse" aria-labelledby="heading${i}" data-bs-parent="#aclist">
+              <div class="accordion-body"><table class="table table-striped">`;
+
+            $.each(v.words, function (y, z) {
+                html += `<tr><td><strong>${z.word}</strong></td><td>${z.w_translated}</td></tr>`;
+            })
+
+            html += `</table></div>
+            </div>
+          </div>`;
+
+            n++;
+
+        });
+
+        $body.html($(`<div class="accordion" id="aclist"> ${html} </div>`));
+
+        console.log(wordsbydict);
+        $(CardsLang.modal_lists).modal("toggle");
     },
 
     modalAddListShow: function () {
@@ -116,14 +154,14 @@ const CardsLang = {
         const modal = CardsLang.modal_add_list;
 
         const input_title = modal.querySelector("#modal-list-add__title");
-        const title = input_title.value;
+        const list_name = input_title.value;
 
         modal.querySelectorAll(".row-dict").forEach((row) => {
             const word = row.querySelector(".og-text").value;
             const w_translated = row.querySelector(".tr-text").value;
 
             if (word != "") {
-                CardsLangLocalData.addWord(word, w_translated, title);
+                CardsLangLocalData.addWord(word, w_translated, list_name);
             }
 
             row.remove();
@@ -160,14 +198,20 @@ const CardsLang = {
         $(CardsLang.modal_game).find("p").removeClass("d-none");
     },
     modalGameLoad: function (obj) {
-        console.log(obj);
         if (obj) {
             const $modal = $(CardsLang.modal_game);
             $modal.find("h2").html(obj.word);
-            $modal.find("p").html(obj.w_translated);
+            $modal.find("p").html(obj.w_translated).addClass("d-none");
+            $modal.find("#game-resolve").removeClass("d-none");
 
-            $modal.modal("toggle");
+            if (!$modal.hasClass('show')) {
+                $modal.modal("toggle");
+            }
         }
 
+    },
+    modalGameNextCard: function (obj) {
+        // CardsLang.modalGameHide();
+        CardsLang.modalGameShow();
     }
 };
