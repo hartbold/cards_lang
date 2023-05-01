@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="es" manifest="cache.manifest">
 <head>
     <title>Cartas de idioma</title>
     <meta robots="noindex" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#343541">
     <meta name="description" content="" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="" />
@@ -126,7 +127,8 @@
                         <p class="d-none"></p>
                     </div>
                     <div class="modal-footer">
-                        <button id="next-card" type="button" class="btn btn-sm btn-warning"><i class="fa fa-refresh"></i>Nueva carta</button>
+                        <button id="next-card" type="button" class="btn btn-sm btn-warning"><i
+                                class="fa fa-refresh"></i>Nueva carta</button>
                     </div>
                 </div>
             </div>
@@ -140,11 +142,11 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal"><i
-                            class="fa fa-close"></i>Cerrar</button>
+                                class="fa fa-close"></i>Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -163,7 +165,12 @@
     <script src="js/CardsLangLocalData.js?v=1"></script>
     <script src="js/cards.js?v=1"></script>
     <script>
-
+        function updateSite(event) {
+            // window.location.reload(true);
+            window.applicationCache.update();
+            window.applicationCache.swapCache();
+        }
+        window.applicationCache.addEventListener('updateready', updateSite, false);
     </script>
 </body>
 
