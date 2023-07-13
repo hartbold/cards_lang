@@ -20,6 +20,7 @@ const CardsLang = {
     modal_game_btn: null,
     modal_game_btn_open: null,
     modal_game_btn_next: null,
+    btn_export: null,
 
     ctrl_modal_opened: false,
 
@@ -39,7 +40,7 @@ const CardsLang = {
         this.modal_game_btn = document.getElementById('game-resolve');
         this.modal_game_btn_open = document.getElementById('random-word');
         this.modal_game_btn_next = document.getElementById('next-card');
-
+        this.btn_export = document.getElementById('exportar');
         this.init_listeners();
     },
 
@@ -59,6 +60,8 @@ const CardsLang = {
         this.modal_game_btn.addEventListener("click", this.modalGameResolve);
         this.modal_game_btn_open.addEventListener("click", this.modalGameShow);
         this.modal_game_btn_next.addEventListener("click", this.modalGameNextCard);
+
+        this.btn_export.addEventListener("click", this.exportDict);
 
     },
 
@@ -218,5 +221,42 @@ const CardsLang = {
     modalGameNextCard: function (obj) {
         // CardsLang.modalGameHide();
         CardsLang.modalGameShow();
+    },
+
+    exportDict: function() {
+        CardsLangLocalData.getWordList().then(function(w){
+            
+            var fields = Object.keys(w[0])
+            var replacer = function(key, value) { return value === null ? '' : value } 
+            var csv = w.map(function(row){
+              return fields.map(function(fieldName){
+                return JSON.stringify(row[fieldName], replacer)
+              }).join(',')
+            })
+            csv.unshift(fields.join(',')) // add header column
+            csv = csv.join('\r\n');
+            console.log(csv);
+
+            // var json = JSON.stringify(data);
+            fileName = 'cards_lang.csv'
+            //IE11 support
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                let blob = new Blob([csv], {type: "text/csv"});
+                window.navigator.msSaveOrOpenBlob(blob, fileName);
+            } else {// other browsers
+                let file = new File([csv], fileName, {type: "text/csv"});
+                let exportUrl = URL.createObjectURL(file);
+                window.location.assign(exportUrl);
+                URL.revokeObjectURL(exportUrl);
+            }
+
+
+
+            //const newTab = window.open();
+            //newTab.document.
+            //window.location = ('data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURIComponent(csv))
+
+        })
+
     }
 };

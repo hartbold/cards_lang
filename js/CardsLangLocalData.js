@@ -5,6 +5,7 @@ const CardsLangLocalData = {
     DB_STORE_NAME: 'words',
 
     last_random_ix: null,
+    wordsList:[],
 
 
     init_localdata: function () {
@@ -135,6 +136,30 @@ const CardsLangLocalData = {
 
         }
 
+    },
+
+    getWordList: async function () {
+
+        const store = CardsLangLocalData.getObjectStore(CardsLangLocalData.DB_STORE_NAME, "readonly");
+        var index = store.index('word');
+
+        return new Promise(function (resolve, reject) {
+            var req = index.openCursor(null, 'next');
+
+            req.onsuccess = (evt) => {
+                var cursor = evt.target.result;
+                if (cursor) {
+                    CardsLangLocalData.wordsList.push(cursor.value);
+                    cursor.continue();
+                } else {
+                    resolve(CardsLangLocalData.wordsList);
+                }
+            }
+
+            req.onerror = (evt) => {
+                console.error('loadLists error')
+            }
+        });
     },
 
     UpdateListWhereWord: function (wordvalue) {
