@@ -89,10 +89,9 @@ const CardsLang = {
 
     showListsShow: function (wordsbydict) {
 
-        wordsbydict = []
         if(!wordsbydict.length){
-            $.notify("No tienes listas creadas.");
-            return;
+            //$.notify("No tienes listas creadas.");
+            //return;
         }
 
         const $body = $(CardsLang.modal_lists).find(".modal-body");

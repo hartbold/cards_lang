@@ -8,7 +8,7 @@ window.applicationCache.addEventListener('updateready', function (event) {
 }, false);
 
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
+    navigator.serviceWorker.register('../sw.js')
         .then((reg) => {
 
             if (reg.waiting) {

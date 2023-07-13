@@ -6,18 +6,18 @@
 
 const cacheName = "cards-v1";
 const appShellFiles = [
-    "/",
-    "/index.html",
-    "/css/cards.css",
-    "/img/favicon.png",
-    "/img/lluru512.png",
-    "/img/llurugagulirse.png",
+    "",
+    "index.html",
+    "css/cards.css",
+    "img/favicon.png",
+    "img/lluru512.png",
+    "img/llurugagulirse.png",
 
-    "/js/components/RowList.js",
-    "/js/components/RowDict.js",
-    "/js/CardsLang.js",
-    "/js/CardsLangLocalData.js",
-    "/js/cards.js",
+    "js/components/RowList.js",
+    "js/components/RowDict.js",
+    "js/CardsLang.js",
+    "js/CardsLangLocalData.js",
+    "js/cards.js",
 ];
 
 self.addEventListener("install", (e) => {
